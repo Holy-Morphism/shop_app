@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/screens/cart_screen.dart';
 
-void main() => runApp(MyApp());
+import './screens/product_detail.dart';
+import './screens/products_overveiw.dart';
+
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MyShop',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+    final ThemeData theme = ThemeData();
+    ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('MyShop'),
-      ),
-      body: const Center(
-        child: Text('Let\'s build a shop!'),
+        primarySwatch: Colors.purple,
+        fontFamily: 'Kablammo');
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => Products()),
+        ChangeNotifierProvider(create: (context) => Cart()),
+      ],
+      child: MaterialApp(
+        title: 'MyShop',
+        debugShowCheckedModeBanner: false,
+        theme: theme.copyWith(
+            colorScheme:
+                theme.colorScheme.copyWith(secondary: Colors.deepOrange)),
+        routes: {
+          '/': (context) => const ProductOverviewScreen(),
+          ProductDetailScreen.routeName: (context) =>
+              const ProductDetailScreen(),
+          CartScreen.routeName: (context) => const CartScreen()
+        },
       ),
     );
   }
